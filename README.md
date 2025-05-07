@@ -21,3 +21,7 @@
 3. Set the value of `Volume` in `SC_Master` from `0.0` to `1.0`.
 
 4. Set the value of `Fallof Distance` in `SA_Crystals` from `0.0` to `500.0`
+
+### Crystals always having their white outline
+
+1. Add a `Parent BeingPlay` node at the start of the `Event BeginPlay` event in `BP_Item_Crystals`.
