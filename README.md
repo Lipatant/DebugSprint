@@ -12,6 +12,10 @@
 
 1. Removing the `Event Tick` event in `GM_Level1`.
 
+2. Removing the `Event Tick` event in `L_DeepCave`.
+
+3. Removing the `CustomEvent` event in `WBP_HUD`.
+
 ### Crystals not emitting sound
 
 1. Fill the `set Crystal SFX` nodes with the appropriate SFXs in the `Event BeginPlay` event in `BP_Item_Crystals`.
