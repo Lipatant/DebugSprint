@@ -45,3 +45,13 @@
 6. Add a `Hide Info Text` function call from `HUDRef` at the end of the `LineTraceNotOverlapping` event in `BP_FPSPlayer`.
 
 7. Remove the instances of the `Event Start Look at Interactables` and `Event Stop Look at Interactables` events in `BP_Item_Crystals`.
+
+### Items always colliding with the player
+
+1. Add a `HoldingObjectCollisionType` variable of type `ECollision Enabled Type` in `BP_FPS_Player`.
+
+2. Insert `Set HoldingObjectCollisionType` from the previous `As BP Master Item`.`SM Shape`.`Get Collision Enabled` after the `Attach Actor to Actor` node in the `EnhancedInputActyion IA_PlayerInteract` event in `BP_FPS_Player`.
+
+3. Insert `As BP Master Item`.`SM Shape`.`Set Collision Enabled` with `New Type` set to `No Collision` after the previous `Set HoldingObjectCollisionType` node.
+
+4. Insert `Set Collision Enabled` from the previous `As BP Master Item`.`SM Shape`.`Get Collision Enabled` with `New Type` set to the `HoldingObjectCollisionType` variable after the `Detach from Actor` node in the `EnhancedInputActyion IA_PlayerInteract` event in `BP_FPS_Player`.
