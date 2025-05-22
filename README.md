@@ -55,3 +55,7 @@
 3. Insert `As BP Master Item`.`SM Shape`.`Set Collision Enabled` with `New Type` set to `No Collision` after the previous `Set HoldingObjectCollisionType` node.
 
 4. Insert `Set Collision Enabled` from the previous `As BP Master Item`.`SM Shape`.`Get Collision Enabled` with `New Type` set to the `HoldingObjectCollisionType` variable after the `Detach from Actor` node in the `EnhancedInputActyion IA_PlayerInteract` event in `BP_FPS_Player`.
+
+### Item grapping range being too long
+
+1. Change the value of `LineTraceLength` from `750.0` to `500.0` in `BP_FPS_Player`.
