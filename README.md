@@ -71,3 +71,9 @@
 ### Crystal Pedestals being unusable after one use
 
 1. Add an empty `Set CrystalOnPiedestral` at the end of the `On Component End Overlap (Sphere)` event in `BP_Item_CrystalPedestral`.
+
+### Items having the player focus when placed onto a Crystal Pedestral
+
+1. Add an empty `Set OutHitActor` at the end of the `ForceUngrab` event in `BP_FPS_Player`.
+
+2. Set `Decal_Outline`.`Visible` to `false` in `BP_Item_Crystaledestre`.
