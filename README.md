@@ -59,3 +59,7 @@
 ### Item grapping range being too long
 
 1. Change the value of `LineTraceLength` from `750.0` to `500.0` in `BP_FPS_Player`.
+
+### The game crashes instantly when running its exported version
+
+1. Remove the `GameEngine=/Script/MissingPlugin.MagicEngineSubsystem` line in `Config/DefaultEngine.ini`.
