@@ -83,3 +83,11 @@
 1. Remove everything from `Cast To BP_ItemCrystals` to `Set Material` in the `On Component End Overlap (Sphere)` event in `BP_Item_CrystalPedestral`.
 
 2. Link back together the start of the branch and `Set Light Color` in the `On Component End Overlap (Sphere)` event in `BP_Item_CrystalPedestral`.
+
+### Solving the puzzle not triggering anything
+
+1. Add a `LevelSequenceActor` variable of type `LevelSequenceActor` in `BP_Item_CrystalPedestral`, instance editable and exposed on spawn.
+
+2. Add a `LevelSequenceActor`.`SequencePlayer`.`Play` node at the end of the `CheckIfEnigmalsOver` event in `BP_Item_CrystalPedestral`.
+
+3. Set the value of `LevelSequenceActor` in `BP_Item_CrystalPedestral2`, `BP_Item_CrystalPedestral3` and `BP_Item_CrystalPedestral4` to `S_FirstEnigmaCompleted` in `L_DeepCave`.
