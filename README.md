@@ -133,3 +133,7 @@
 7. Add a `PuzzleTracker`.`SetSource` node with `Source` set to `Self` and `Solved` set to `true` at the end of the `GoodCrystal` event in `BP_Item_CrystalPedestral`.
 
 8. Set the value of `PuzzleTracker` in `BP_Item_CrystalPedestral2`, `BP_Item_CrystalPedestral3` and `BP_Item_CrystalPedestral4` to `BP_PuzzleTracker` in `L_DeepCave`.
+
+### Door closing back after a certain amount of time
+
+1. Set the value of `PlaybackSettings`.`Pause at End` in `S_FirstEnigmaCompleted` to `true` in `L_DeepCave`.
