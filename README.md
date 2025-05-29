@@ -63,3 +63,7 @@
 ### The game crashes instantly when running its exported version
 
 1. Remove the `GameEngine=/Script/MissingPlugin.MagicEngineSubsystem` line in `Config/DefaultEngine.ini`.
+
+### Crystal Pedestals being unusable after one use
+
+1. Add an empty `Set CrystalOnPiedestral` at the end of the `On Component End Overlap (Sphere)` event in `BP_Item_CrystalPedestral`.
