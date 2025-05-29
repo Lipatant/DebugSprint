@@ -77,3 +77,9 @@
 1. Add an empty `Set OutHitActor` at the end of the `ForceUngrab` event in `BP_FPS_Player`.
 
 2. Set `Decal_Outline`.`Visible` to `false` in `BP_Item_Crystaledestre`.
+
+### Crystal Pedestre having color issues after removing a correct crystal
+
+1. Remove everything from `Cast To BP_ItemCrystals` to `Set Material` in the `On Component End Overlap (Sphere)` event in `BP_Item_CrystalPedestral`.
+
+2. Link back together the start of the branch and `Set Light Color` in the `On Component End Overlap (Sphere)` event in `BP_Item_CrystalPedestral`.
