@@ -48,13 +48,17 @@
 
 ### Items always colliding with the player
 
-1. Add a `HoldingObjectCollisionType` variable of type `ECollision Enabled Type` in `BP_FPS_Player`.
+1. Add an Object Channel called `HeldItem` with a default response of `Overlap`.
 
-2. Insert `Set HoldingObjectCollisionType` from the previous `As BP Master Item`.`SM Shape`.`Get Collision Enabled` after the `Attach Actor to Actor` node in the `EnhancedInputActyion IA_PlayerInteract` event in `BP_FPS_Player`.
+2. Add a `HoldingObjectCollisionChannel` variable of type `ECollision Channel type` in `BP_FPS_Player`.
 
-3. Insert `As BP Master Item`.`SM Shape`.`Set Collision Enabled` with `New Type` set to `Query and Probe` after the previous `Set HoldingObjectCollisionType` node.
+3. Insert `Set HoldingObjectCollisionChannel` from the previous `As BP Master Item`.`SM Shape`.`Get Collision Object Type` after the `Attach Actor to Actor` node in the `EnhancedInputActyion IA_PlayerInteract` event in `BP_FPS_Player`.
 
-4. Insert `Set Collision Enabled` from the previous `As BP Master Item`.`SM Shape`.`Get Collision Enabled` with `New Type` set to the `HoldingObjectCollisionType` variable after the `Detach from Actor` node in the `EnhancedInputActyion IA_PlayerInteract` event in `BP_FPS_Player`.
+4. Insert `As BP Master Item`.`SM Shape`.`Set Collision Object Type` with `Channel` set to `HeldItem` after the previous `Set HoldingObjectCollisionChannel` node.
+
+5. Insert `Set Collision Channel` from the previous `As BP Master Item`.`SM Shape`.`Get Collision Object Type` with `Channel` set to the `HoldingObjectCollisionChannel` variable after the `Detach from Actor` node in the `EnhancedInputActyion IA_PlayerInteract` event in `BP_FPS_Player`.
+
+6. Set `Collision Presets`.`Object Responses`.`HeldItem` to `Ignore` in `BP_FPSPlayer`.
 
 ### Item grapping range being too long
 
