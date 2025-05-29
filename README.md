@@ -52,7 +52,7 @@
 
 2. Insert `Set HoldingObjectCollisionType` from the previous `As BP Master Item`.`SM Shape`.`Get Collision Enabled` after the `Attach Actor to Actor` node in the `EnhancedInputActyion IA_PlayerInteract` event in `BP_FPS_Player`.
 
-3. Insert `As BP Master Item`.`SM Shape`.`Set Collision Enabled` with `New Type` set to `No Collision` after the previous `Set HoldingObjectCollisionType` node.
+3. Insert `As BP Master Item`.`SM Shape`.`Set Collision Enabled` with `New Type` set to `Query and Probe` after the previous `Set HoldingObjectCollisionType` node.
 
 4. Insert `Set Collision Enabled` from the previous `As BP Master Item`.`SM Shape`.`Get Collision Enabled` with `New Type` set to the `HoldingObjectCollisionType` variable after the `Detach from Actor` node in the `EnhancedInputActyion IA_PlayerInteract` event in `BP_FPS_Player`.
 
