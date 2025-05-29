@@ -91,3 +91,45 @@
 2. Add a `LevelSequenceActor`.`SequencePlayer`.`Play` node at the end of the `CheckIfEnigmalsOver` event in `BP_Item_CrystalPedestral`.
 
 3. Set the value of `LevelSequenceActor` in `BP_Item_CrystalPedestral2`, `BP_Item_CrystalPedestral3` and `BP_Item_CrystalPedestral4` to `S_FirstEnigmaCompleted` in `L_DeepCave`.
+
+### The puzzle can be solved by completing one crystal multiple times
+
+#### A. Adding a BP_PuzzleTracker
+
+1. Create a blueprint class named `BP_PuzzleTracker`, inheriting from `Actor`.
+
+2. Add a `HasBeenSolved` variable of type `Boolean` in `BP_PuzzleTracker`.
+
+3. Add a `LevelSequenceActor` variable of type `LevelSequenceActor` in `BP_PuzzleTracker`, instance editable and exposed on spawn.
+
+4. Add a `StepCount` variable of type `Integer` in `BP_PuzzleTracker`, instance editable and exposed on spawn.
+
+5. Add a `StepSourceArray` variable of type `Array[Actor]` in `BP_PuzzleTracker`.
+
+6. Add a `SetSource` event to `BP_PuzzleTracker`, with two parameters: `Source` of type `Actor` and `Solved` of type `Boolean` (with a default value of `true`).
+
+7. Fill the `SetSource` event with a branch made from `Solved`. On `false`, add a `StepSourceArray`.`Remove` node with `Item` set to `Source`.
+
+8. Fill the on `true` branch of the `SetSource` event with a `StepSourceArray`.`AddUnique` node with `Item` set to `Source`, followed by a branch made from `HasBeenSolved` that, on `false`, is followed by another branch made from (`StepSourceArray`.`Length` >= `StepCount`) that, on `true` calls a newly created `Solve` event.
+
+9. Fill this newly created `Solve` event with a `Set HasBeenSolved` node is to `true` and a `LevelSequenceActor`.`SequencePlayer`.`Play` node.
+
+10. Place an instance of `BP_PuzzleTracker` in `L_DeepCave`, setting the value of `LevelSequenceActor` to `S_FirstEnigmaCompleted` and the value of `StepCount` to `3`
+
+#### B. Implementing BP_PuzzleTracker in BP_Item_CrystalPedestre
+
+1. Remove `LevelSequenceActor` from `BP_Item_CrystalPedestre`.
+
+2. Remove the `CheckIfEnigmalsOver` event and its references from `BP_Item_CrystalPedestre`.
+
+3. Remove `PlayerRef`.`FirstEnigmaTotalValid`.`++` and `PrintString` from the `On Component Begin Overlap (Sphere)` event in `BP_Item_CrystalPedestral`.
+
+4. Remove `PlayerRef`.`FirstEnigmaTotalValid`.`--` from the `On Component End Overlap (Sphere)` event in `BP_Item_CrystalPedestral`.
+
+5. Add a `PuzzleTracker` variable of type `BP_PuzzleTracker` in `BP_Item_CrystalPedestral`, instance editable and exposed on spawn.
+
+6. Add a `PuzzleTracker`.`SetSource` node with `Source` set to `Self` and `Solved` set to `false` at the end of the `On Component End Overlap (Sphere)` event, on the on `true` pin, in `BP_Item_CrystalPedestral`.
+
+7. Add a `PuzzleTracker`.`SetSource` node with `Source` set to `Self` and `Solved` set to `true` at the end of the `GoodCrystal` event in `BP_Item_CrystalPedestral`.
+
+8. Set the value of `PuzzleTracker` in `BP_Item_CrystalPedestral2`, `BP_Item_CrystalPedestral3` and `BP_Item_CrystalPedestral4` to `BP_PuzzleTracker` in `L_DeepCave`.
