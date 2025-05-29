@@ -137,3 +137,7 @@
 ### Door closing back after a certain amount of time
 
 1. Set the value of `PlaybackSettings`.`Pause at End` in `S_FirstEnigmaCompleted` to `true` in `L_DeepCave`.
+
+### Door not having collision
+
+1. Replace every part of the door with static meshes.
