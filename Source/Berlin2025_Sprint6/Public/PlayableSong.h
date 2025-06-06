@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include <fstream>
 #include "CoreMinimal.h"
 #include "PlayableSongChart.h"
 #include "UObject/NoExportTypes.h"
