@@ -17,7 +17,9 @@ class BERLIN2025_SPRINT6_API UPlayableSong : public UObject
 public:
 	UPlayableSong();
 	~UPlayableSong();
-	void Initialize(const FString FilePath);
+	// Initializes the song from its FilePath.
+	UFUNCTION(BlueprintCallable)
+	void Initialize(const FString FilePath, bool &Success);
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere);
 	TArray<UPlayableSongChart*> Charts;

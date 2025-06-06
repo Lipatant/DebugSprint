@@ -15,6 +15,8 @@ class BERLIN2025_SPRINT6_API UPlayableSongChart : public UObject
 
 public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	FString Description = "";
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	int Meter = 1;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	FString StepStype = "";

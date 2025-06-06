@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "PlayableSong.h"
+
 #include <fstream>
 #include <sstream>
-
-#include "PlayableSong.h"
 
 UPlayableSong::UPlayableSong()
 {
@@ -13,11 +13,16 @@ UPlayableSong::~UPlayableSong()
 {
 }
 
-void UPlayableSong::Initialize(const FString FilePath)
+void UPlayableSong::Initialize(const FString FilePath, bool& Success)
 {
-	std::ifstream File(std::string(TCHAR_TO_UTF8(*FilePath)));
-	std::string Line;
 	UPlayableSongChart* Chart = NULL;
+	std::string Line;
+	FString FilePathConverted = FPaths::ProjectContentDir() + "/" + FilePath;
+	std::ifstream File(std::string(TCHAR_TO_UTF8(*FilePathConverted)));
+	if (!File) {
+		Success = false;
+		return;
+	}
 	while (std::getline(File, Line)) {
 		if (Line.starts_with("#NOTEDATA:;")) {
 			if (Chart) {
@@ -26,7 +31,10 @@ void UPlayableSong::Initialize(const FString FilePath)
 			Chart = NewObject<UPlayableSongChart>();
 		}
 		if (Chart) {
-			if (Line.starts_with("#METER:")) {
+			if (Line.starts_with("#DESCRIPTION:")) {
+				Chart->Description = Line.substr(13, Line.find(';') - 13).c_str();
+			}
+			else if (Line.starts_with("#METER:")) {
 				Chart->Meter = std::stoi(Line.substr(7, Line.find(';') - 7));
 			}
 			else if (Line.starts_with("#STEPSTYPE:")) {
@@ -38,4 +46,5 @@ void UPlayableSong::Initialize(const FString FilePath)
 		Charts.Add(Chart);
 	}
 	File.close();
+	Success = true;
 }
