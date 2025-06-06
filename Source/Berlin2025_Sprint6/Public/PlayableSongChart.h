@@ -8,7 +8,7 @@
 
 #include "PlayableSongChart.generated.h"
 
-UCLASS(Blueprintable)
+UCLASS(Blueprintable, BlueprintType)
 class BERLIN2025_SPRINT6_API UPlayableSongChart : public UObject
 {
 	GENERATED_BODY()

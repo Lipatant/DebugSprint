@@ -9,7 +9,7 @@
 
 #include "PlayableSong.generated.h"
 
-UCLASS(Blueprintable)
+UCLASS(Blueprintable, BlueprintType)
 class BERLIN2025_SPRINT6_API UPlayableSong : public UObject
 {
 	GENERATED_BODY()
@@ -18,9 +18,9 @@ public:
 	UPlayableSong();
 	~UPlayableSong();
 	// Initializes the song from its FilePath.
-	UFUNCTION(BlueprintCallable)
-	void Initialize(const FString FilePath, bool &Success);
+	UFUNCTION(BlueprintCallable, Category = "Playable Song")
+	bool Initialize(const FString &FilePath);
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere);
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<UPlayableSongChart*> Charts;
 };

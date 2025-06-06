@@ -13,32 +13,31 @@ UPlayableSong::~UPlayableSong()
 {
 }
 
-void UPlayableSong::Initialize(const FString FilePath, bool& Success)
+bool UPlayableSong::Initialize(const FString &FilePath)
 {
 	UPlayableSongChart* Chart = NULL;
 	std::string Line;
 	FString FilePathConverted = FPaths::ProjectContentDir() + "/" + FilePath;
-	std::ifstream File(std::string(TCHAR_TO_UTF8(*FilePathConverted)));
-	if (!File) {
-		Success = false;
-		return;
+	std::ifstream File(TCHAR_TO_UTF8(*FilePathConverted));
+	if (!File.is_open()) {
+		return false;
 	}
 	while (std::getline(File, Line)) {
 		if (Line.starts_with("#NOTEDATA:;")) {
 			if (Chart) {
 				Charts.Add(Chart);
 			}
-			Chart = NewObject<UPlayableSongChart>();
+			Chart = NewObject<UPlayableSongChart>(this);
 		}
 		if (Chart) {
 			if (Line.starts_with("#DESCRIPTION:")) {
-				Chart->Description = Line.substr(13, Line.find(';') - 13).c_str();
+				Chart->Description = UTF8_TO_TCHAR(Line.substr(13, Line.find(';') - 13).c_str());
 			}
 			else if (Line.starts_with("#METER:")) {
 				Chart->Meter = std::stoi(Line.substr(7, Line.find(';') - 7));
 			}
 			else if (Line.starts_with("#STEPSTYPE:")) {
-				Chart->StepStype = Line.substr(11, Line.find(';') - 11).c_str();
+				Chart->StepStype = UTF8_TO_TCHAR(Line.substr(11, Line.find(';') - 11).c_str());
 			}
 		}
 	}
@@ -46,5 +45,5 @@ void UPlayableSong::Initialize(const FString FilePath, bool& Success)
 		Charts.Add(Chart);
 	}
 	File.close();
-	Success = true;
+	return true;
 }
