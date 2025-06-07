@@ -15,8 +15,13 @@ bool UPlayableSong::Initialize(const FString &FilePath)
 	FString FullPath = FPaths::ProjectContentDir() + "PlayableSongs/" + FilePath;
 	FString FileContent;
 
+	if (!FPaths::FileExists(FullPath)) {
+		UE_LOG(LogTemp, Error, TEXT("Couldn't find file: %s."), *FullPath);
+		return false;
+	}
 	if (!FFileHelper::LoadFileToString(FileContent, *FullPath))
 	{
+		UE_LOG(LogTemp, Error, TEXT("Couldn't load file: %s."), *FullPath);
 		return false;
 	}
 
