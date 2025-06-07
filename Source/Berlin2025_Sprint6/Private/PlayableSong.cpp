@@ -12,7 +12,7 @@ UPlayableSong::~UPlayableSong()
 
 bool UPlayableSong::Initialize(const FString &FilePath)
 {
-	FString FullPath = FPaths::ProjectSavedDir() + "PlayableSongs/" + FilePath;
+	FString FullPath = FPaths::ProjectContentDir() + "PlayableSongs/" + FilePath;
 	FString FileContent;
 
 	if (!FFileHelper::LoadFileToString(FileContent, *FullPath))
@@ -37,7 +37,10 @@ bool UPlayableSong::Initialize(const FString &FilePath)
 		{
 			if (Line.StartsWith("#DESCRIPTION:"))
 			{
-				Chart->Description = Line.Mid(13, Line.Find(";", ESearchCase::IgnoreCase, ESearchDir::FromStart, 13));
+				int32 EndIndex = Line.Find(";", ESearchCase::IgnoreCase, ESearchDir::FromStart, 13);
+				if (EndIndex != INDEX_NONE) {
+					Chart->Description = Line.Mid(13, EndIndex - 13);
+				}
 			}
 			else if (Line.StartsWith("#METER:"))
 			{
@@ -45,7 +48,10 @@ bool UPlayableSong::Initialize(const FString &FilePath)
 			}
 			else if (Line.StartsWith("#STEPSTYPE:"))
 			{
-				Chart->StepStype = Line.Mid(11, Line.Find(";", ESearchCase::IgnoreCase, ESearchDir::FromStart, 11));
+				int32 EndIndex = Line.Find(";", ESearchCase::IgnoreCase, ESearchDir::FromStart, 13);
+				if (EndIndex != INDEX_NONE) {
+					Chart->StepStype = Line.Mid(11, EndIndex - 11);
+				}
 			}
 		}
 	}
