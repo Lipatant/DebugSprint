@@ -2,20 +2,33 @@
 
 #pragma once
 
-#include "ChartStepType.h"
 #include "CoreMinimal.h"
+
+#include "ChartStepType.h"
 
 #include "ChartStep.generated.h"
 
-USTRUCT(Blueprintable, BlueprintType)
+USTRUCT(BlueprintType)
 struct BERLIN2025_SPRINT6_API FChartStep
 {
-	GENERATED_BODY();
+	GENERATED_BODY()
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Chart")
+	int32 Index;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Chart")
 	uint8 Position;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Chart")
 	EChartStepType StepType;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Chart")
 	int32 TimeSinceLast;
+
+	bool operator==(const FChartStep& Step) const
+	{
+		return Index == Step.Index;
+	}
 };
+
+FORCEINLINE uint32 GetTypeHash(const FChartStep& Step)
+{
+	return ::GetTypeHash(Step.Index);
+}

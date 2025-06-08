@@ -2,6 +2,9 @@
 
 #include "PlayableSong.h"
 
+#include "ChartStep.h"
+#include "ChartStepType.h"
+
 UPlayableSong::UPlayableSong()
 {
 }
@@ -27,6 +30,8 @@ bool UPlayableSong::Initialize(const FString &FilePath)
 
 	UPlayableSongChart* Chart = nullptr;
 	TArray<FString> Lines;
+	int32 Index = 0;
+	int32 TimeSinceLast = 0;
 
 	FileContent.ParseIntoArrayLines(Lines);
 	for (FString& Line: Lines)
@@ -37,6 +42,8 @@ bool UPlayableSong::Initialize(const FString &FilePath)
 				Charts.Add(Chart);
 			}
 			Chart = NewObject<UPlayableSongChart>(this);
+			Index = 0;
+			TimeSinceLast = 0;
 		}
 		else if (Chart)
 		{
@@ -56,6 +63,55 @@ bool UPlayableSong::Initialize(const FString &FilePath)
 				int32 EndIndex = Line.Find(";", ESearchCase::IgnoreCase, ESearchDir::FromStart, 13);
 				if (EndIndex != INDEX_NONE) {
 					Chart->StepStype = Line.Mid(11, EndIndex - 11);
+				}
+			}
+			else if (Line.Len() >= 5)
+			{
+				bool Valid = true;
+				EChartStepType Content[5];
+				for (uint8 i = 0; i < 5; i++)
+				{
+					switch (Line[i])
+					{
+					case '0':
+						Content[i] = EChartStepType::NONE;
+						break;
+					case '1':
+						Content[i] = EChartStepType::TAP;
+						break;
+					case '2':
+						Content[i] = EChartStepType::HOLD;
+						break;
+					case '3':
+						Content[i] = EChartStepType::END;
+						break;
+					case '4':
+						Content[i] = EChartStepType::ROLL;
+						break;
+					default:
+						Valid = false;
+						break;
+					}
+					if (Valid)
+					{
+						break;
+					}
+				}
+				if (Valid)
+				{
+					for (uint8 i = 0; i < 5; i++)
+					{
+						if (Content[i] == EChartStepType::NONE) {
+							continue;
+						}
+						FChartStep Step = {
+							Index, i, Content[i], TimeSinceLast
+						};
+						Chart->Steps.Add(Step);
+						Index++;
+						TimeSinceLast = 0;
+					}
+					TimeSinceLast++;
 				}
 			}
 		}

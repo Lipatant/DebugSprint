@@ -6,7 +6,7 @@
 
 #include "ChartStepType.generated.h"
 
-UENUM(Blueprintable, BlueprintType)
+UENUM(BlueprintType)
 enum class EChartStepType : uint8 {
 	NONE UMETA(DisplayName = "None"),
 	TAP UMETA(DisplayName = "Tap"),

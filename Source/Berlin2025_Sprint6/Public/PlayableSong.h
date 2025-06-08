@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "PlayableSongChart.h"
 #include "UObject/NoExportTypes.h"
 

@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include "ChartStep.h"
 #include "CoreMinimal.h"
+
+#include "ChartStep.h"
 #include "UObject/NoExportTypes.h"
 
 #include "PlayableSongChart.generated.h"
@@ -14,12 +15,12 @@ class BERLIN2025_SPRINT6_API UPlayableSongChart : public UObject
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Playable Song Chart")
 	FString Description = "";
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Playable Song Chart")
 	int Meter = 1;
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Playable Song Chart")
 	FString StepStype = "";
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Playable Song Chart")
 	TArray<FChartStep> Steps;
 };

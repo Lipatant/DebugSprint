@@ -3,6 +3,7 @@
 	"EngineAssociation": "5.4",
 	"Category": "",
 	"Description": "",
+	"LiveCoding": false,
 	"Modules": [
 		{
 			"Name": "Berlin2025_Sprint6",
