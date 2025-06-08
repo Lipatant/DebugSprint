@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "ChartStep.h"
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 
@@ -19,4 +20,6 @@ public:
 	int Meter = 1;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	FString StepStype = "";
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TArray<FChartStep> Steps;
 };
