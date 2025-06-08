@@ -65,6 +65,14 @@ bool UPlayableSong::Initialize(const FString &FilePath)
 					Chart->StepStype = Line.Mid(11, EndIndex - 11);
 				}
 			}
+			else if (Line.StartsWith(","))
+			{
+				FChartStep Step = {
+					Index, 0, EChartStepType::NONE, 0
+				};
+				Chart->Steps.Add(Step);
+				Index++;
+			}
 			else if (Line.Len() >= 5)
 			{
 				bool Valid = true;
@@ -92,7 +100,7 @@ bool UPlayableSong::Initialize(const FString &FilePath)
 						Valid = false;
 						break;
 					}
-					if (Valid)
+					if (!Valid)
 					{
 						break;
 					}
