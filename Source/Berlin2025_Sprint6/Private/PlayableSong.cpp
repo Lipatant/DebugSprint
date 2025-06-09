@@ -106,11 +106,11 @@ bool UPlayableSong::Initialize(const FString &FilePath)
 						}
 						float Beat = BarIndex * 4.0f + 4.0f * (i / static_cast<float>(StepCountInBar));
 						float Delta = Chart->GetDeltaFromBeat(Beat);
-						bool Valid = false;
+						bool Valid = true;
 						EChartStepType Content[5];
 						for (uint8 j = 0; j < 5; j++)
 						{
-							switch (StepsInBar[i][j])
+							switch (StepData[j])
 							{
 							case '0':
 								Content[j] = EChartStepType::NONE;
