@@ -94,11 +94,7 @@ bool UPlayableSong::Initialize(const FString &FilePath)
 			}
 			else if (InNoteSection)
 			{
-				if (Line == ";")
-				{
-					InNoteSection = false;
-				}
-				else if (Line == ",")
+				if ((Line == ",") || (Line == ";"))
 				{
 					int StepCountInBar = StepsInBar.Num();
 					for (int i = 0; i < StepCountInBar; i++)
@@ -155,6 +151,10 @@ bool UPlayableSong::Initialize(const FString &FilePath)
 					}
 					BarIndex++;
 					StepsInBar.Empty();
+					if (Line == ";")
+					{
+						InNoteSection = false;
+					}
 				}
 				else
 				{
