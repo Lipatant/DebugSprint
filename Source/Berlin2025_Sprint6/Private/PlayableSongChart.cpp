@@ -31,7 +31,7 @@ float UPlayableSongChart::GetDeltaFromBeat(float const Beat)
             break;
         }
 
-        Delta += (60.0f - CurrentBPM) * (Next.Beat - CurrentBeat);
+        Delta += (60.0f / CurrentBPM) * (Next.Beat - CurrentBeat);
         CurrentBPM = Next.BPM;
         CurrentBeat = Next.Beat;
     }
