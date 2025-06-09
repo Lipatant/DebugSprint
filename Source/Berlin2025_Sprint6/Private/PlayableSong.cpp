@@ -50,16 +50,16 @@ bool UPlayableSong::Initialize(const FString &FilePath)
 		{
 			if (Line.StartsWith("#BPMS:"))
 			{
-				FString BPMData = Line.Mid(6);
+				FString LineData = Line.Mid(6);
 				TArray<FString> BPMChangeDataList;
-				BPMData.ParseIntoArray(BPMChangeDataList, ",", true);
-				for (const FString& BPMChangeData : BPMChangeDataList)
+				LineData.ParseIntoArray(BPMChangeDataList, TEXT(","), true);
+				for (const FString &BPMChangeData : BPMChangeDataList)
 				{
 					FString BeatData;
 					FString BPMData;
-					if (Pair.Split("=", &BeatData, &BPMData))
+					if (BPMChangeData.Split("=", &BeatData, &BPMData))
 					{
-						Chart->BPMChanges.Add(FCString::Atof(*BeatData), FCString::Atof(*BPMData));
+						Chart->BPMChanges.Add({FCString::Atof(*BeatData), FCString::Atof(*BPMData)});
 					}
 				}
 			}

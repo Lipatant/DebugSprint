@@ -22,7 +22,7 @@ struct BERLIN2025_SPRINT6_API FBPMChange
 
 FORCEINLINE uint32 GetTypeHash(const FBPMChange& BPMChange)
 {
-	return ::GetTypeHash(BPMChange.Step);
+	return ::GetTypeHash(BPMChange.Beat);
 }
 
 UCLASS(Blueprintable, BlueprintType)

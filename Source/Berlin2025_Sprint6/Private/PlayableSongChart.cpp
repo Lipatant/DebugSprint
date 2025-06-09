@@ -24,7 +24,7 @@ float UPlayableSongChart::GetDeltaFromBeat(float const Beat)
     float CurrentBPM = BPMChanges[0].BPM;
     float CurrentBeat = 0.0f;
 
-    for (uint i = 1, i < BPMChanges.Num(); i++)
+    for (int i = 1; i < BPMChanges.Num(); i++)
     {
         const FBPMChange &Next = BPMChanges[i];
         if (Next.Beat >= Beat) {
@@ -36,8 +36,8 @@ float UPlayableSongChart::GetDeltaFromBeat(float const Beat)
         CurrentBeat = Next.Beat;
     }
 
-    Seconds += (60.0f / CurrentBPM) * (Beat - CurrentBeat);
-    return Seconds;
+    Delta += (60.0f / CurrentBPM) * (Beat - CurrentBeat);
+    return Delta;
 }
 
 void UPlayableSongChart::ResetSteps()
