@@ -27,7 +27,7 @@ float UPlayableSongChart::GetDeltaFromBeat(float const Beat)
     for (int i = 1; i < BPMChanges.Num(); i++)
     {
         const FBPMChange &Next = BPMChanges[i];
-        if (Next.Beat >= Beat) {
+        if (Next.Beat > Beat) {
             break;
         }
 
@@ -38,6 +38,22 @@ float UPlayableSongChart::GetDeltaFromBeat(float const Beat)
 
     Delta += (60.0f / CurrentBPM) * (Beat - CurrentBeat);
     return Delta;
+}
+
+int32 UPlayableSongChart::ParseAndAddBPM(FString const &Data)
+{
+    TArray<FString> DataList;
+    Data.ParseIntoArray(DataList, TEXT(",;"), true);
+    for (const FString& BPMChangeData : DataList)
+    {
+        FString BeatData;
+        FString BPMData;
+        if (BPMChangeData.Split("=", &BeatData, &BPMData))
+        {
+            BPMChanges.Add({ FCString::Atof(*BeatData), FCString::Atof(*BPMData) });
+        }
+    }
+    return DataList.Num();
 }
 
 void UPlayableSongChart::ResetSteps()

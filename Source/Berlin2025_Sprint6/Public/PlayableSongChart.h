@@ -51,4 +51,7 @@ public:
 	// Resets Steps.
 	UFUNCTION(BlueprintCallable, Category = "Playable Song Chart")
 	void ResetSteps();
+	// Parses BPM data and returns the amount of BPM elements parsed.
+	UFUNCTION()
+	int32 ParseAndAddBPM(FString const &Data);
 };

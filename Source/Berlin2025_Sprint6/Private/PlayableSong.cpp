@@ -5,6 +5,12 @@
 #include "ChartStep.h"
 #include "ChartStepType.h"
 
+enum ESection {
+	BPMS,
+	NONE,
+	NOTES,
+};
+
 UPlayableSong::UPlayableSong()
 {
 }
@@ -13,7 +19,7 @@ UPlayableSong::~UPlayableSong()
 {
 }
 
-bool UPlayableSong::Initialize(const FString &FilePath)
+bool UPlayableSong::Initialize(const FString& FilePath)
 {
 	FString FullPath = FPaths::ProjectContentDir() + "PlayableSongs/" + FilePath;
 	FString FileContent;
@@ -32,8 +38,11 @@ bool UPlayableSong::Initialize(const FString &FilePath)
 	UPlayableSongChart* Chart = nullptr;
 	TArray<FString> Lines;
 	int32 Index = 0;
-	bool InNoteSection = false;
+	ESection Section = ESection::NONE;
 	TArray<FString> StepsInBar;
+	EChartStepType StepsInMemory[5] = {
+		EChartStepType::NONE, EChartStepType::NONE, EChartStepType::NONE, EChartStepType::NONE, EChartStepType::NONE
+	};
 
 	FileContent.ParseIntoArrayLines(Lines);
 	for (FString& Line: Lines)
@@ -45,120 +54,145 @@ bool UPlayableSong::Initialize(const FString &FilePath)
 				Charts.Add(Chart);
 			}
 			Chart = NewObject<UPlayableSongChart>(this);
+			Section = ESection::NONE;
 		}
 		else if (Chart)
 		{
-			if (Line.StartsWith("#BPMS:"))
-			{
-				FString LineData = Line.Mid(6);
-				TArray<FString> BPMChangeDataList;
-				LineData.ParseIntoArray(BPMChangeDataList, TEXT(","), true);
-				for (const FString &BPMChangeData : BPMChangeDataList)
+			if (Section == ESection::NONE) {
+				if (Line.StartsWith("#BPMS:"))
 				{
-					FString BeatData;
-					FString BPMData;
-					if (BPMChangeData.Split("=", &BeatData, &BPMData))
-					{
-						Chart->BPMChanges.Add({FCString::Atof(*BeatData), FCString::Atof(*BPMData)});
+					Chart->ParseAndAddBPM(Line.Mid(6));
+					Section = ESection::BPMS;
+				}
+				else if (Line.StartsWith("#DESCRIPTION:"))
+				{
+					int32 EndIndex = Line.Find(";", ESearchCase::IgnoreCase, ESearchDir::FromStart, 13);
+					if (EndIndex != INDEX_NONE) {
+						Chart->Description = Line.Mid(13, EndIndex - 13);
+					}
+				}
+				else if (Line.StartsWith("#METER:"))
+				{
+					Chart->Meter = FCString::Atoi(*Line.Mid(7));
+				}
+				else if (Line.StartsWith("#NOTES:"))
+				{
+					BarIndex = 0;
+					Index = 0;
+					Section = ESection::NOTES;
+					StepsInBar.Empty();
+					for (uint8 i = 0; i < 5; i++) {
+						StepsInMemory[i] = EChartStepType::NONE;
+					}
+				}
+				else if (Line.StartsWith("#OFFSET:"))
+				{
+					Chart->Offset = FCString::Atof(*Line.Mid(8));
+				}
+				else if (Line.StartsWith("#STEPSTYPE:"))
+				{
+					int32 EndIndex = Line.Find(";", ESearchCase::IgnoreCase, ESearchDir::FromStart, 13);
+					if (EndIndex != INDEX_NONE) {
+						Chart->StepStype = Line.Mid(11, EndIndex - 11);
 					}
 				}
 			}
-			else if (Line.StartsWith("#DESCRIPTION:"))
+			else
 			{
-				int32 EndIndex = Line.Find(";", ESearchCase::IgnoreCase, ESearchDir::FromStart, 13);
-				if (EndIndex != INDEX_NONE) {
-					Chart->Description = Line.Mid(13, EndIndex - 13);
-				}
-			}
-			else if (Line.StartsWith("#METER:"))
-			{
-				Chart->Meter = FCString::Atoi(*Line.Mid(7));
-			}
-			else if (Line.StartsWith("#NOTES:"))
-			{
-				BarIndex = 0;
-				Index = 0;
-				InNoteSection = true;
-				StepsInBar.Empty();
-			}
-			else if (Line.StartsWith("#OFFSET:"))
-			{
-				Chart->Offset = FCString::Atof(*Line.Mid(8));
-			}
-			else if (Line.StartsWith("#STEPSTYPE:"))
-			{
-				int32 EndIndex = Line.Find(";", ESearchCase::IgnoreCase, ESearchDir::FromStart, 13);
-				if (EndIndex != INDEX_NONE) {
-					Chart->StepStype = Line.Mid(11, EndIndex - 11);
-				}
-			}
-			else if (InNoteSection)
-			{
-				if ((Line == ",") || (Line == ";"))
+				switch (Section)
 				{
-					int StepCountInBar = StepsInBar.Num();
-					for (int i = 0; i < StepCountInBar; i++)
+				case ESection::BPMS:
+					Chart->ParseAndAddBPM(Line);
+				case ESection::NOTES:
+					if ((Line == ",") || (Line == ";"))
 					{
-						const FString& StepData = StepsInBar[i];
-						if (StepData.Len() < 5)
+						int StepCountInBar = StepsInBar.Num();
+						for (int i = 0; i < StepCountInBar; i++)
 						{
-							continue;
-						}
-						float Beat = BarIndex * 4.0f + 4.0f * (i / static_cast<float>(StepCountInBar));
-						float Delta = Chart->GetDeltaFromBeat(Beat);
-						bool Valid = true;
-						EChartStepType Content[5];
-						for (uint8 j = 0; j < 5; j++)
-						{
-							switch (StepData[j])
+							const FString& StepData = StepsInBar[i];
+							if (StepData.Len() < 5)
 							{
-							case '0':
-								Content[j] = EChartStepType::NONE;
-								break;
-							case '1':
-								Content[j] = EChartStepType::TAP;
-								break;
-							case '2':
-								Content[j] = EChartStepType::HOLD;
-								break;
-							case '3':
-								Content[j] = EChartStepType::END;
-								break;
-							case '4':
-								Content[j] = EChartStepType::ROLL;
-								break;
-							default:
-								Valid = false;
-								break;
+								continue;
 							}
-						}
-						if (Valid)
-						{
+							float Beat = BarIndex * 4.0f + 4.0f * (i / static_cast<float>(StepCountInBar));
+							float Delta = Chart->GetDeltaFromBeat(Beat);
+							bool Valid = true;
+							EChartStepType Content[5];
 							for (uint8 j = 0; j < 5; j++)
 							{
-								if (Content[j] == EChartStepType::NONE)
+								switch (StepData[j])
 								{
-									continue;
+								case '0':
+									Content[j] = StepsInMemory[j];
+									break;
+								case '1':
+									Content[j] = EChartStepType::TAP;
+									StepsInMemory[j] = EChartStepType::NONE;
+									break;
+								case '2':
+									Content[j] = EChartStepType::HOLD;
+									StepsInMemory[j] = EChartStepType::HOLD_BODY;
+									break;
+								case '3':
+									Content[j] = EChartStepType::END;
+									StepsInMemory[j] = EChartStepType::NONE;
+									break;
+								case '4':
+									Content[j] = EChartStepType::ROLL;
+									StepsInMemory[j] = EChartStepType::ROLL_BODY;
+									break;
+								default:
+									Valid = false;
+									break;
 								}
-								FChartStep Step;
-								Step.Delta = Delta;
-								Step.Index = Index++;
-								Step.Position = j;
-								Step.StepType = Content[j];
-								Chart->Steps.Add(Step);
+							}
+							if (Valid)
+							{
+								for (uint8 j = 0; j < 5; j++)
+								{
+									switch (Content[j])
+									{
+									case EChartStepType::NONE:
+										Content[j] = StepsInMemory[j];
+										break;
+									case EChartStepType::TAP:
+										StepsInMemory[j] = EChartStepType::NONE;
+										break;
+									case EChartStepType::HOLD:
+										StepsInMemory[j] = EChartStepType::HOLD_BODY;
+										break;
+									case EChartStepType::END:
+										StepsInMemory[j] = EChartStepType::NONE;
+										break;
+									case EChartStepType::ROLL:
+										StepsInMemory[j] = EChartStepType::ROLL_BODY;
+										break;
+									}
+									if (Content[j] == EChartStepType::NONE)
+									{
+										continue;
+									}
+									FChartStep Step;
+									Step.Delta = Delta;
+									Step.Index = Index++;
+									Step.Position = j;
+									Step.StepType = Content[j];
+									Chart->Steps.Add(Step);
+								}
 							}
 						}
+						BarIndex++;
+						StepsInBar.Empty();
 					}
-					BarIndex++;
-					StepsInBar.Empty();
-					if (Line == ";")
+					else
 					{
-						InNoteSection = false;
+						StepsInBar.Add(Line);
 					}
+					break;
 				}
-				else
+				if (Line == TEXT(";") || Line.EndsWith(";"))
 				{
-					StepsInBar.Add(Line);
+					Section = ESection::NONE;
 				}
 			}
 		}
