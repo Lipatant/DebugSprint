@@ -103,6 +103,7 @@ bool UPlayableSong::Initialize(const FString& FilePath)
 				{
 				case ESection::BPMS:
 					Chart->ParseAndAddBPM(Line);
+					break;
 				case ESection::NOTES:
 					if ((Line == ",") || (Line == ";"))
 					{

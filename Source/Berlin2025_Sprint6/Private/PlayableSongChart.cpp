@@ -53,6 +53,11 @@ int32 UPlayableSongChart::ParseAndAddBPM(FString const &Data)
             BPMChanges.Add({ FCString::Atof(*BeatData), FCString::Atof(*BPMData) });
         }
     }
+    if (DataList.Num() > 0) {
+        BPMChanges.Sort([](const FBPMChange& A, const FBPMChange& B) {
+            return A.Beat < B.Beat;
+        });
+    }
     return DataList.Num();
 }
 
